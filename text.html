@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>20 Reasons Why I Love You</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <meta name="theme-color" content="#ffccdd" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: #ffe6f0;
+      color: #333;
+      overflow: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255,192,203,0.4) 10%, transparent 11%),
+                  radial-gradient(circle, rgba(255,182,193,0.4) 10%, transparent 11%);
+      background-size: 60px 60px;
+      background-position: 0 0, 30px 30px;
+      animation: bokeh 15s linear infinite;
+      z-index: -1;
+    }
+    @keyframes bokeh {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100px); }
+    }
+    #countdown-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #fcb1b1, #fcdada);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5em;
+      z-index: 99999;
+      text-align: center;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      padding: 40px 20px 20px;
+      background-color: #ffccdd;
+      border-bottom: 4px solid #ff99bb;
+    }
+    header h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3em;
+      margin: 0;
+      color: #b30059;
+    }
+    header p {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .popup-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 90%;
+      font-size: 1.3em;
+      font-family: 'Great Vibes', cursive;
+      color: #b30059;
+      position: relative;
+    }
+    .popup-card button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #ff99bb;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+    }
+    .end-screen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(255, 255, 255, 0.95);
+      z-index: 1000;
+      text-align: center;
+      padding: 60px 20px;
+      font-family: 'Great Vibes', cursive;
+      font-size: 2em;
+      color: #b30059;
+    }
+    .end-screen button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 1em;
+      font-family: 'Quicksand', sans-serif;
+      background-color: #ff99bb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #messageForm {
+      margin-top: 30px;
+      font-family: 'Quicksand', sans-serif;
+    }
+    textarea {
+      width: 90%;
+      padding: 15px;
+      border-radius: 12px;
+      border: 2px solid #ff99bb;
+      font-size: 1em;
+      font-family: 'Quicksand', sans-serif;
+      resize: none;
+    }
+    #submitMessage {
+      margin-top: 15px;
+      padding: 10px 24px;
+      font-size: 1em;
+      background-color: #b30059;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      background-color: #ffe6f0;
+      font-size: 1.1em;
+      color: #cc0066;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      font-family: 'Quicksand', sans-serif;
+    }
+  </style>
+  <audio autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/08/audio_282ee6f4cf.mp3?filename=romantic-piano-14468.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+</head>
+<body>
+  <div id="countdown-screen">
+    <h2>⏳ Waiting for GF Day...</h2>
+    <p id="timer" style="font-size: 2em; margin-top: 10px;"></p>
+  </div>
+
+  <header>
+    <h1>20 Reasons Why I Love You</h1>
+    <p>Tap to reveal each one 💖</p>
+  </header>
+
+  <div class="popup-overlay" id="popup" style="display:none;">
+    <div class="popup-card">
+      Reasons Why I Love You 💌<br />
+      <button onclick="showNextReason()">Start</button>
+    </div>
+  </div>
+
+  <div class="popup-overlay" id="reasonPopup" style="display:none;">
+    <div class="popup-card" id="reasonCard">
+      <div id="reasonText"></div>
+      <button onclick="showNextReason()">Next</button>
+    </div>
+  </div>
+
+  <div class="end-screen" id="endScreen">
+    <p>Yeh sirf 20 wajah thi... <br>Par asli wajah yeh hai:</p>
+    <p style="margin-top: 20px; font-size: 1.5em;">Main tumse dil se pyaar karta hoon ❤️</p>
+    <button onclick="restartReasons()">Read Again</button>
+    <form id="messageForm">
+      <p style="margin-top: 40px; font-size: 0.9em; color: #444; font-family: 'Quicksand', sans-serif;">Tum bhi mujhe ek pyaara message likh do 💌</p>
+      <textarea rows="4" placeholder="Apna message yahaan likho..."></textarea><br>
+      <button type="submit" id="submitMessage">Send to Ansh</button>
+    </form>
+  </div>
+
+  <footer>
+    These are just 20 reasons, but there are infinite more. <br />
+    I love you endlessly. 💖<br />
+    — Yours, Ansh
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCv-C6nhd3a3jwVWPuyXncKgnZ4ol-OAhk",
+      authDomain: "pvtt-80b08.firebaseapp.com",
+      databaseURL: "https://pvtt-80b08-default-rtdb.firebaseio.com",
+      projectId: "pvtt-80b08",
+      storageBucket: "pvtt-80b08.firebasestorage.app",
+      messagingSenderId: "541829272127",
+      appId: "1:541829272127:web:a81200fc8c0fb615cbde8a"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const now = new Date();
+    const targetDate = new Date("2025-08-01T00:00:00");
+
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+      if (diff <= 0) {
+        document.getElementById("countdown-screen").style.display = "none";
+        document.getElementById("popup").style.display = "flex";
+      } else {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        setTimeout(updateCountdown, 1000);
+      }
+    }
+    updateCountdown();
+
+    document.getElementById("messageForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const msg = this.querySelector("textarea").value.trim();
+      if (msg) {
+        db.ref("love-messages").push({
+          message: msg,
+          timestamp: new Date().toISOString()
+        }).then(() => {
+          alert("Aapka message save ho gaya 💖");
+          this.querySelector("textarea").value = "";
+        }).catch(err => {
+          alert("Kuch error aaya 😢: " + err.message);
+        });
+      } else {
+        alert("Kuch toh likho yaar! 😅");
+      }
+    });
+
+    const reasons = [
+      "Tumhari aankhon mein ek duniya hai jahan sirf sukoon hai… aur main har din wahan kho jana chahta hoon.",
+      "Tum bina bole sab samajh leti ho. Aur yeh baat mujhe har baar aur pyaar mein gira deti hai.",
+      "Tumhari hansi… yeh duniya ki sabse khoobsurat awaaz hai.",
+      "Tumhare aane se meri zindagi soft aur bright dono ban gayi. Jaise ek thandi dhoop jo sirf mere liye nikli ho.",
+      "Tum galtiyan accept karti ho, aur khud ko better banati ho. That’s so beautiful.",
+      "Jab tum khud pe hans deti ho, mujhe lagta hai tum duniya ki sabse cute insaan ho.",
+      "Tum khayal rakhti ho — bina dikhaye. Aur main har baar feel karta hoon wo pyaar.",
+      "Tumse baat karna din ka best part hota hai. Chahe din kaisa bhi gaya ho, tum sab theek kar deti ho.",
+      "Tumhari har ek baat mein ek simplicity hai. Jo sab kuch aur bhi khoobsurat bana deti hai.",
+      "Tum meri zindagi ki sabse achhi timing ho. Bas uss din ka shukr hai jab hum mile.",
+      "Main tumse pyaar isliye nahi karta kyunki tum perfect ho... balki isliye kyunki tum real ho.",
+      "Tum khud ko underestimate karti ho, aur mujhe tumse baar baar kehna padta hai — 'tum enough ho, aur kaafi zyada ho.'",
+      "Tumhara patience mujhe har baar inspire karta hai.",
+      "Tum jab pareshan hoti ho, main bas tumhe hug karna chahta hoon aur kehna: 'Main hoon na.'",
+      "Tum jab khush hoti ho toh lagta hai duniya sahi jagah pe hai.",
+      "Tumhare bina sab kuch adhura sa lagta hai.",
+      "Tumhare hugs duniya ki sabse comforting cheez hain. Soft, warm, aur bilkul waise jaise kisi ko waqai pyaar mil raha ho.",
+      "Tum sirf meri nahi ho… tum meri dua ho.",
+      "Tum itni pyari ho ki kabhi kabhi khud se sawaal karta hoon: 'Sach mein meri ho?'",
+      "Main tumse pyaar karta hoon, bina kisi wajah ke… bas karta hoon. Aur hamesha karta rahunga."
+    ];
+
+    let current = 0;
+    function showNextReason() {
+      const popup = document.getElementById('popup');
+      const reasonPopup = document.getElementById('reasonPopup');
+      const reasonText = document.getElementById('reasonText');
+      const endScreen = document.getElementById('endScreen');
+      popup.style.display = 'none';
+      if (current < reasons.length) {
+        reasonText.innerHTML = `Reason ${current + 1}:<br><br>` + reasons[current];
+        reasonPopup.style.display = 'flex';
+        current++;
+      } else {
+        reasonPopup.style.display = 'none';
+        endScreen.style.display = 'flex';
+      }
+    }
+    function restartReasons() {
+      current = 0;
+      document.getElementById('endScreen').style.display = 'none';
+      showNextReason();
+    }
+  </script>
+</body>
+</html>
