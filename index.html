@@ -169,10 +169,7 @@
   </audio>
 </head>
 <body>
-  <div id="countdown-screen">
-    <h2>⏳ Waiting for GF Day...</h2>
-    <p id="timer" style="font-size: 2em; margin-top: 10px;"></p>
-  </div>
+ 
 
   <header>
     <h1>20 Reasons Why I Love You</h1>
@@ -223,26 +220,8 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const now = new Date();
-    const targetDate = new Date("2025-08-01T00:00:00");
+ document.getElementById("popup").style.display = "flex";
 
-
-    function updateCountdown() {
-      const now = new Date();
-      const diff = targetDate - now;
-      if (diff <= 0) {
-        document.getElementById("countdown-screen").style.display = "none";
-        document.getElementById("popup").style.display = "flex";
-      } else {
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
-        document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        setTimeout(updateCountdown, 1000);
-      }
-    }
-    updateCountdown();
 
     document.getElementById("messageForm").addEventListener("submit", function (e) {
       e.preventDefault();
@@ -266,8 +245,8 @@
       "Tumhari aankhon mein ek duniya hai jahan sirf sukoon hai… aur main har din wahan kho jana chahta hoon.",
       "Tum bina bole sab samajh leti ho. Aur yeh baat mujhe har baar aur pyaar mein gira deti hai.",
       "Tumhari hansi… yeh duniya ki sabse khoobsurat awaaz hai.",
-      "Tumhare aane se meri zindagi soft aur bright dono ban gayi. Jaise ek thandi dhoop jo sirf mere liye nikli ho.",
-      "Tum galtiyan accept karti ho, aur khud ko better banati ho. That’s so beautiful.",
+      " Tumhari aankhon mein sirf khoobsurti nahi, ek sukoon hai Jahan main apna sab kuch bhool ke bas jeena chahta hoon.",
+      "Tumhari muskurahat sirf smile nahi hoti...Woh mere din ka sunshine hoti hai — bina warning ke bright kar dene wali.",
       "Jab tum khud pe hans deti ho, mujhe lagta hai tum duniya ki sabse cute insaan ho.",
       "Tum khayal rakhti ho — bina dikhaye. Aur main har baar feel karta hoon wo pyaar.",
       "Tumse baat karna din ka best part hota hai. Chahe din kaisa bhi gaya ho, tum sab theek kar deti ho.",
@@ -277,14 +256,13 @@
       "Tum khud ko underestimate karti ho, aur mujhe tumse baar baar kehna padta hai — 'tum enough ho, aur kaafi zyada ho.'",
       "Tumhara patience mujhe har baar inspire karta hai.",
       "Tum jab pareshan hoti ho, main bas tumhe hug karna chahta hoon aur kehna: 'Main hoon na.'",
-      "Tum jab khush hoti ho toh lagta hai duniya sahi jagah pe hai.",
-      "Tumhare bina sab kuch adhura sa lagta hai.",
+      "Tum perfect nahi ho, aur main chahta bhi nahi…Kyuki tum jaisi ho, waisi hi meri duniya ho.",
+      "Jab main thak jaata hoon duniya se...Toh bas ek Hi tumhara, sab kuch theek kar deta hai.",
       "Tumhare hugs duniya ki sabse comforting cheez hain. Soft, warm, aur bilkul waise jaise kisi ko waqai pyaar mil raha ho.",
-      "Tum sirf meri nahi ho… tum meri dua ho.",
+      "TTu mera addiction nahi, mera comfort hai..Jo mujhe barbaad nahi, complete karta hai.",
       "Tum itni pyari ho ki kabhi kabhi khud se sawaal karta hoon: 'Sach mein meri ho?'",
       "Main tumse pyaar karta hoon, bina kisi wajah ke… bas karta hoon. Aur hamesha karta rahunga."
     ];
-
     let current = 0;
     function showNextReason() {
       const popup = document.getElementById('popup');
